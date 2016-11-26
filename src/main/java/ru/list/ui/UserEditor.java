@@ -1,5 +1,7 @@
 package ru.list.ui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -27,6 +29,8 @@ import ru.list.core.data.model.User;
 @SpringComponent
 @UIScope
 class UserEditor extends VerticalLayout {
+
+    private static final Logger log = LoggerFactory.getLogger(UserEditor.class);
 
     private final UserRepository repository;
 
@@ -58,8 +62,14 @@ class UserEditor extends VerticalLayout {
         save.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 
         // wire action buttons to save, delete and reset
-        save.addClickListener(e -> repository.save(user));
-        delete.addClickListener(e -> repository.delete(user));
+        save.addClickListener(e -> {
+            log.info("Saving user: " + user.toString());
+            repository.save(user);
+        });
+        delete.addClickListener(e -> {
+            log.info("Delete user: " + user.toString());
+            repository.delete(user);
+        });
         cancel.addClickListener(e -> editUser(user));
         setVisible(false);
     }
